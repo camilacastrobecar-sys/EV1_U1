@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de evaluación</title>
+    <style>
+        body {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 16px;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-top: 14px;
+        }
+
+        input, select, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            padding: 12px;
+            border: 1px solid #aaa;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Evaluación formativa</h1>
+        <p>Ingresa tus datos, selecciona una carrera técnica y luego uno de sus módulos.</p>
+
+        <form id="formulario">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre completo" required>
+
+            <label for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="Ingresa tu correo electrónico" required>
+
+            <label for="carrera">Carrera técnica</label>
+            <select id="carrera" name="carrera" required>
+                <option value="">Selecciona una carrera</option>
+                <option value="Técnico en Programación">Técnico en Programación</option>
+                <option value="Técnico en Enfermería">Técnico en Enfermería</option>
+                <option value="Técnico en Administración">Técnico en Administración</option>
+                <option value="Técnico en Electricidad">Técnico en Electricidad</option>
+                <option value="Técnico en Construcción">Técnico en Construcción</option>
+            </select>
+
+            <label for="modulo">Módulo</label>
+            <select id="modulo" name="modulo" required disabled>
+                <option value="">Primero selecciona una carrera</option>
+            </select>
+
+            <button type="submit">Registrar datos</button>
+        </form>
+
+        <section id="resultado" aria-live="polite" hidden></section>
+    </main>
+
+    <script>
+        const modulosPorCarrera = {
+            "Técnico en Programación": [
+                "Fundamentos de programación",
+                "Programación orientada a objetos",
+                "Bases de datos",
+                "Desarrollo web"
+            ],
+            "Técnico en Enfermería": [
+                "Anatomía y fisiología",
+                "Cuidados básicos de enfermería",
+                "Primeros auxilios",
+                "Salud comunitaria"
+            ],
+            "Técnico en Administración": [
+                "Administración general",
+                "Contabilidad básica",
+                "Gestión de personas",
+                "Atención al cliente"
+            ],
+            "Técnico en Electricidad": [
+                "Fundamentos de electricidad",
+                "Circuitos eléctricos",
+                "Instalaciones eléctricas",
+                "Seguridad eléctrica"
+            ],
+            "Técnico en Construcción": [
+                "Materiales de construcción",
+                "Lectura de planos",
+                "Procesos constructivos",
+                "Prevención de riesgos"
+            ]
+        };
+
+        const formulario = document.getElementById("formulario");
+        const carrera = document.getElementById("carrera");
+        const modulo = document.getElementById("modulo");
+        const resultado = document.getElementById("resultado");
+
+        carrera.addEventListener("change", function () {
+            modulo.replaceChildren();
+            modulo.add(new Option("Selecciona un módulo", ""));
+
+            const modulos = modulosPorCarrera[carrera.value] || [];
+            modulos.forEach(function (nombreModulo) {
+                modulo.add(new Option(nombreModulo, nombreModulo));
+            });
+
+            modulo.disabled = modulos.length === 0;
+            resultado.hidden = true;
+        });
+
+        formulario.addEventListener("submit", function (evento) {
+            evento.preventDefault();
+
+            const nombre = document.getElementById("nombre").value.trim();
+            const correo = document.getElementById("correo").value.trim();
+
+            resultado.textContent =
+                "Datos registrados correctamente. Nombre: " + nombre +
+                " | Correo: " + correo +
+                " | Carrera: " + carrera.value +
+                " | Módulo: " + modulo.value + ".";
+            resultado.hidden = false;
+        });
+    </script>
+</body>
+</html>
